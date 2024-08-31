@@ -1,3 +1,4 @@
 **/.env
 **/venv
 **/tmdb_api/__pycache__
+**/test
