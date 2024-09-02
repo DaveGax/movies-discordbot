@@ -11,10 +11,25 @@ intents = discord.Intents.all()
 intents.messages = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents) #Prefix para usar los comandos '/'
+
+CANAL_PERMITIDO = 1280153631743676448  #Id del canal donde se pueden usar comandos (TESTO)
 
 
+#Check para verificar que el comando se escriba en el canal permitido
+def canal_requerido():
+    async def predicate(ctx):
+        return ctx.channel.id == CANAL_PERMITIDO
+    return commands.check(predicate)
+
+#Comando !info para ver la información del bot
+@bot.command(name='info')
+async def info(ctx):
+    await ctx.send('¡Discord bot in development!\nUse "/popular" to see Popular Movies\nUse "/toprated" to see Top Rated Movies')
+
+#Comando !popular para ver las peliculas populares
 @bot.command(name='popular')
+@canal_requerido() #Aplica el check al comando
 async def popular(ctx):
     titles = get_popular_movies()
     if titles:
@@ -22,7 +37,9 @@ async def popular(ctx):
     else:
         await ctx.send("Failed to get popular movies.")
 
+#Comando !toprated para ver las peliculas mejor valoradas
 @bot.command(name='toprated')
+@canal_requerido() #Aplica el check al comando
 async def toprated(ctx):
     titles = get_toprated_movies()
     if titles:
@@ -30,10 +47,7 @@ async def toprated(ctx):
     else:
         await ctx.send("Failed to get toprated movies.")
 
-@bot.command(name='info')
-async def info(ctx):
-    await ctx.send('¡Discord bot in development!\nUse "!popular" to see Popular Movies\nUse "!toprated" to see Top Rated Movies')
-
+#Evento que devuelve un saludo al escribir 'Hi'
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -42,7 +56,6 @@ async def on_message(message):
         await message.channel.send(f'Hi {message.author.name}!')
 
     await bot.process_commands(message)
-
 
 
 bot.run(token)
