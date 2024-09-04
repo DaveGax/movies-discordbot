@@ -26,9 +26,17 @@ def canal_requerido():
 #Comando /info para ver la información del bot
 @bot.command(name='info')
 async def info(ctx):
+    embed = discord.Embed(
+        title = '__¡Discord bot in development!__',
+        color = discord.Color.blue(),
+        url = 'https://github.com/DaveGax/movies-discordbot'
+    )
+    embed.add_field(name = '**Commands**:', value = '/popular <List of popular movies>\n/toprated <List of top rated movies>', inline=False)
+    embed.set_footer(text = 'In development by: DaveGax')
+
 
     await ctx.message.delete()
-    await ctx.send('¡Discord bot in development!\nUse "/popular" to see Popular Movies\nUse "/toprated" to see Top Rated Movies')
+    await ctx.send(embed=embed)
 
 
 #Comando /popular para ver las peliculas populares
