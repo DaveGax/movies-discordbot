@@ -54,13 +54,19 @@ async def popular(ctx):
 @bot.command(name='toprated')
 @canal_requerido() #Aplica el check al comando
 async def toprated(ctx):
+    embed = discord.Embed(
+        title = '__Top Rated Movies__',
+        color = discord.Color.blurple(),
+        url = 'https://www.themoviedb.org/movie/top-rated?language=en'
+    )
     titles = get_toprated_movies()
     if titles:
-        await ctx.message.delete()
-        await ctx.send(f"Toprated Movies: {', '. join(titles)}")
+        embed.add_field(name='**Movies:**', value='\n'.join(titles), inline=False)
     else:
-        await ctx.message.delete()
-        await ctx.send("Failed to get toprated movies.")
+        embed.add_field(name='**Movies:**', value='Error, movies not found', inline=False)
+    
+    await ctx.message.delete()
+    await ctx.send(embed=embed)
 
 
 #Evento que devuelve un saludo al escribir 'Hi'
