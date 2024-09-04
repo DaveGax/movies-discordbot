@@ -23,13 +23,15 @@ def canal_requerido():
     return commands.check(predicate)
 
 
-#Comando !info para ver la información del bot
+#Comando /info para ver la información del bot
 @bot.command(name='info')
 async def info(ctx):
+
+    await ctx.message.delete()
     await ctx.send('¡Discord bot in development!\nUse "/popular" to see Popular Movies\nUse "/toprated" to see Top Rated Movies')
 
 
-#Comando !popular para ver las peliculas populares
+#Comando /popular para ver las peliculas populares
 @bot.command(name='popular')
 @canal_requerido() #Aplica el check al comando
 async def popular(ctx):
@@ -43,18 +45,21 @@ async def popular(ctx):
         embed.add_field(name='**Movies:**', value='\n'.join(titles), inline=False)
     else:
         embed.add_field(name='**Movies:**', value='Error, movies not found', inline=False)
-
+    
+    await ctx.message.delete()
     await ctx.send(embed=embed)
 
 
-#Comando !toprated para ver las peliculas mejor valoradas
+#Comando /toprated para ver las peliculas mejor valoradas
 @bot.command(name='toprated')
 @canal_requerido() #Aplica el check al comando
 async def toprated(ctx):
     titles = get_toprated_movies()
     if titles:
+        await ctx.message.delete()
         await ctx.send(f"Toprated Movies: {', '. join(titles)}")
     else:
+        await ctx.message.delete()
         await ctx.send("Failed to get toprated movies.")
 
 
