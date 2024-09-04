@@ -22,20 +22,30 @@ def canal_requerido():
         return ctx.channel.id == CANAL_PERMITIDO
     return commands.check(predicate)
 
+
 #Comando !info para ver la información del bot
 @bot.command(name='info')
 async def info(ctx):
     await ctx.send('¡Discord bot in development!\nUse "/popular" to see Popular Movies\nUse "/toprated" to see Top Rated Movies')
 
+
 #Comando !popular para ver las peliculas populares
 @bot.command(name='popular')
 @canal_requerido() #Aplica el check al comando
 async def popular(ctx):
+    embed = discord.Embed(
+        title = '__Popular Movies__',
+        color = discord.Color.blue(),
+        url = 'https://www.themoviedb.org/movie?language=en'
+    )
     titles = get_popular_movies()
     if titles:
-        await ctx.send(f"Popular Movies: {', '.join(titles)}")
+        embed.add_field(name='**Movies:**', value='\n'.join(titles), inline=False)
     else:
-        await ctx.send("Failed to get popular movies.")
+        embed.add_field(name='**Movies:**', value='Error, movies not found', inline=False)
+
+    await ctx.send(embed=embed)
+
 
 #Comando !toprated para ver las peliculas mejor valoradas
 @bot.command(name='toprated')
@@ -46,6 +56,7 @@ async def toprated(ctx):
         await ctx.send(f"Toprated Movies: {', '. join(titles)}")
     else:
         await ctx.send("Failed to get toprated movies.")
+
 
 #Evento que devuelve un saludo al escribir 'Hi'
 @bot.event
